@@ -1,0 +1,15 @@
+1. Restaurants whose borough is "Manhattan"
+
+	db.restaurants.find( { "borough": "Manhattan" } )
+
+2. Number of restaurants in "Manhattan" with some grade scored greater than 10.
+
+	db.restaurants.find( { $and : [ { "borough": "Manhattan" }, { "grades": {$elemMatch: { score: {$gt : 10} } } } ] } ).count()
+
+3. Average score by cuisine type
+
+	db.restaurants.aggregate([
+		{$unwind:"$grades"},
+		{$group:{_id:"$cuisine",number:{$avg:"$grades.score"}}},
+		{$sort:{_id:1}}
+	])
